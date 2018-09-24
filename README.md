@@ -8,7 +8,7 @@ A Boggle-like variant, but with more options:
 
 3. I plan on ranking game board so that players can play simultaneously or with the same board and rules without requiring any kind of connection.
 
-This is predominantly an exercise in playing with tries, trie-packing, and learning JavaFX.
+This is predominantly an exercise in playing with tries, trie-packing, learning JavaFX, and playing more with Java 9 and 10.
 
 I would also like to use this as an opportunity to investigate information compression and value by using tries and packed tries to evaluate the inherent value in glyphs and words in different languages.
 
