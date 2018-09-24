@@ -9,23 +9,21 @@
 
 package com.vorpal.toggle.trie;
 
+import com.vorpal.utils.Pair;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.Normalizer;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Stack;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public final class LinkedTrie implements Trie {
-
     /************
      * TrieNode *
      ************/
-    private final class TrieNode {
+    private final class LinkedTrieNode implements TrieNode {
         // The characters represented by this node.
         // For example, if this node has "t", the parent has "i", and the grandparent is the root, then this node
         // represents the word "it".
@@ -35,30 +33,30 @@ public final class LinkedTrie implements Trie {
         private final boolean isValidWord;
 
         // The children of this node.
-        private final Map<Character, TrieNode> children;
+        private final Map<Character, LinkedTrieNode> children;
 
         // The parent of this node in the trie: the root has an empty value.
-        private final Optional<TrieNode> parent;
+        private final Optional<LinkedTrieNode> parent;
 
         // Creates an empty root node.
-        TrieNode() {
+        LinkedTrieNode() {
             this(Optional.empty(), "", false);
         }
 
-        TrieNode(final Optional<TrieNode> parent, final String contents, final boolean isValidWord) {
+        LinkedTrieNode(final Optional<LinkedTrieNode> parent, final String contents, final boolean isValidWord) {
             this.parent = parent;
             this.contents = contents.toLowerCase();
             this.isValidWord = isValidWord;
             children = new HashMap<>();
         }
 
-        TrieNode(final TrieNode parent, final String contents, final boolean isWord) {
+        LinkedTrieNode(final LinkedTrieNode parent, final String contents, final boolean isWord) {
             this(Optional.ofNullable(parent), contents, isWord);
         }
 
         // Used for packing only.
-        private TrieNode(final Optional<TrieNode> parent, final String contents,
-                         final boolean isValidWord, final Map<Character, TrieNode> children) {
+        private LinkedTrieNode(final Optional<LinkedTrieNode> parent, final String contents,
+                               final boolean isValidWord, final Map<Character, LinkedTrieNode> children) {
             this.parent = parent;
             this.contents = contents.toLowerCase();
             this.isValidWord = isValidWord;
@@ -78,19 +76,21 @@ public final class LinkedTrie implements Trie {
          */
         public void pack() {
             // Pack the children.
-            children.values().forEach(TrieNode::pack);
+            children.values().forEach(LinkedTrieNode::pack);
 
+            // If this is a valid word, we can't pack, because we would lose that information.
             if (!isValidWord && children.size() == 1) {
                 children.forEach(($, childValue) -> {
-                    final TrieNode packed = new TrieNode(parent, contents + childValue.contents,
+                    final LinkedTrieNode packed = new LinkedTrieNode(parent, contents + childValue.contents,
                             childValue.isValidWord, childValue.children);
 
-                    // If this node hsa a parent, set it to be equal to the new node.
+                    // If this node has a parent, set it to be equal to the new node.
                     parent.ifPresent(p -> p.children.put(contents.charAt(0), packed));
-
-                    // Clear out the children to get rid of all in-pointers, so this node will be GCed.
-                    children.clear();
                 });
+
+                // Clear out the children here to eliminate all in pointers to this node, since we want it to be
+                // garbage collected along with its children.
+                children.clear();
             }
         }
 
@@ -109,13 +109,13 @@ public final class LinkedTrie implements Trie {
             // If it is not currently a valid word, we must switch it to be one and change the parent to point
             // to this one instead. If words are being added in alphabetical order, this should never happen.
             if (s2.isEmpty() && !isValidWord) {
-                final TrieNode node = new TrieNode(parent, contents, true, children);
+                final LinkedTrieNode node = new LinkedTrieNode(parent, contents, true, children);
                 parent.ifPresent(p -> p.children.put(contents.charAt(0), node));
                 return;
             } else if (!s2.isEmpty()) {
                 var first = s2.charAt(0);
                 var node = children.computeIfAbsent(first,
-                        ($) -> new TrieNode(this, String.valueOf(first), s2.length() == 1));
+                        ($) -> new LinkedTrieNode(this, String.valueOf(first), s2.length() == 1));
 
                 // Now invoke with the rest of s2 on the child node.
                 node.add(s2);
@@ -123,7 +123,7 @@ public final class LinkedTrie implements Trie {
         }
 
         // Determine if the fragment here is a word.
-        boolean isWord(final String s) {
+        public boolean isWord(final String s) {
             // The first condition shouldn't happen as we only iterate if we have letters left.
             // Secondly, if s doesn't start with the contents of this node, it is not a word.
             if (s.isEmpty() || !s.startsWith(contents))
@@ -137,13 +137,17 @@ public final class LinkedTrie implements Trie {
             // Otherwise, we recurse via children if there is an entry for the next character.
             return children.containsKey(s2.charAt(0)) && children.get(s2.charAt(0)).isWord(s2);
         }
+
+        public String getContents() {
+            return contents;
+        }
     }
     /*************/
 
     // Create a Trie from a stream of words.
     // Diactrics are removed, and strings are converted to lowercase.
     public LinkedTrie(final Stream<String> words) {
-        root = new TrieNode();
+        root = new LinkedTrieNode();
         words.map(w -> Normalizer.normalize(w, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", ""))
                 .forEach(root::add);
     }
@@ -193,28 +197,73 @@ public final class LinkedTrie implements Trie {
      * Dumps the tree by visiting each node.
      */
     public void dump(final Consumer<String> consumer) {
-        class NodePair {
-            NodePair(final String s, final TrieNode n) {
-                this.s = s;
-                this.n = n;
-            }
-            String s;
-            TrieNode n;
-        }
-
-        final Stack<NodePair> nodes = new Stack<>();
-        nodes.push(new NodePair("", root));
+        final Stack<Pair<LinkedTrieNode, String>> nodes = new Stack<>();
+        nodes.push(new Pair<>(root, ""));
         while (!nodes.empty()) {
             final var np   = nodes.pop();
-            final var node = np.n;
-            final var str  = np.s + node.contents;
+            final var node = np.first;
+            final var str  = np.second + node.contents;
 
             if (node.isValidWord)
                 consumer.accept(str);
 
-            node.children.values().forEach(c -> nodes.push(new NodePair(str, c)));
+            node.children.values().forEach(c -> nodes.push(new Pair<>(c, str)));
         }
     }
 
-    private final TrieNode root;
+    /******************
+     * TrieStatistics *
+     ******************/
+    // Some statistics about the size and height of the trie, in order to determine the effect that packing has.
+    public class TrieStatistics {
+        public int height  = -1;
+        public long nodes  =  0;
+        public long words  =  0;
+
+        // In the regular trie case, it should be the case that each node minus the root contains one character.
+        // We want to track, for each number of characters, how many nodes there in the packed tree.
+        public final Map<Integer, Integer> nodesByCharCount = new TreeMap<>();
+
+        // Because there are a surprising number of nodes that contain very large strings, keep track:
+        public final Map<Integer, ArrayList<String>> stringCompressionsByCharCount = new TreeMap<>();
+    }
+
+    /**
+     * Calculate statistics based on the trie.
+     */
+    public TrieStatistics analyze() {
+        TrieStatistics stats = new TrieStatistics();
+
+        // We keep track of the height of the tree.
+        final Stack<Pair<LinkedTrieNode, Integer>> nodes = new Stack<>();
+        nodes.push(new Pair<>(root, 0));
+        while (!nodes.empty()) {
+            final var pr     = nodes.pop();
+            final var node   = pr.first;
+            final var height = pr.second;
+
+            ++stats.nodes;
+            stats.nodesByCharCount.put(node.contents.length(), stats.nodesByCharCount.getOrDefault(node.contents.length(), 0) + 1);
+
+            var array = stats.stringCompressionsByCharCount.getOrDefault(node.contents.length(), new ArrayList<>());
+            array.add(node.contents);
+            stats.stringCompressionsByCharCount.put(node.contents.length(), array);
+
+            // Check if we are a valid word.
+            if (node.isValidWord)
+                ++stats.words;
+
+            // If there are no children, we are a contender for the height of the tree.
+            if (node.children.isEmpty())
+                if (height > stats.height)
+                    stats.height = height;
+
+            // Recurse over the children.
+            node.children.values().forEach(c -> nodes.push(new Pair<>(c, height + 1)));
+        }
+
+        return stats;
+    }
+
+    private final LinkedTrieNode root;
 }
