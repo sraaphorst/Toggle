@@ -2,7 +2,7 @@
 
 A Boggle-like variant (the name is a play on "Toroidal Boggle"), but with more options:
 
-1. The board can be a subset of the euclidean plane as per usual Boggle, or played on the surface of a horizontal or vertical cylinder; a torus; a mobius strip; a Klein bottle; or a projective plane.
+1. The board can be a subset of the euclidean plane as per usual Boggle; or played on the surface of a horizontal or vertical cylinder; a torus; a mobius strip; a Klein bottle; or a projective plane.
 
 2. The game can be timed or untimed.
 
