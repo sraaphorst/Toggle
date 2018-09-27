@@ -95,7 +95,8 @@ public final class LinkedTrie implements Trie {
         }
 
         // Add a word, or a partially digested word fragment, to this node.
-        public void add(final String s) {
+        public void add(final String sm) {
+            final String s = sm.toLowerCase();
             if (!s.startsWith(contents))
                 // Something has gone wrong. This call means that the trie is invalid.
                 // This could have resulted in packing before adding all words.

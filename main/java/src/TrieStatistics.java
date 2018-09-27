@@ -36,7 +36,7 @@ public class TrieStatistics {
 
         maybeIdx.ifPresentOrElse(
                 lower_idx -> {
-                    for (var i = lower_idx; i < upper_idx; ++i) {
+                    for (var i = lower_idx; i <= upper_idx; ++i) {
                         System.out.println("Contents of nodes with length " + i + ":");
                         for (final var c: stats.stringCompressionsByCharCount.get(i))
                             System.out.print("  " + c);

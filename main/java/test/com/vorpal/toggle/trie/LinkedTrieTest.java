@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LinkedTrieTest {
+final class LinkedTrieTest {
     private static LinkedTrie trie;
 
     @BeforeAll
@@ -18,4 +18,27 @@ class LinkedTrieTest {
     void findApple() {
         assertTrue(trie.isWord("apple"));
     }
+
+    @Test
+    void findApples() {
+        assertTrue(trie.isWord("apples"));
+    }
+
+    @Test
+    void findApplesauce() {
+        assertTrue(trie.isWord("applesauce"));
+    }
+
+    @Test
+    void doNotFindAppleSau() {
+        assertFalse(trie.isWord("applesau"));
+    }
+
+    @Test
+    void caseDoesntMatter() {
+        assertTrue(trie.isWord("APPLE"));
+        assertTrue(trie.isWord("Apple"));
+        assertTrue(trie.isWord("aPpLe"));
+    }
+
 }
