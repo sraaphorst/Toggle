@@ -1,5 +1,5 @@
 /**
- * Stats.java
+ * TrieStatistics.java
  *
  * By Sebastian Raaphorst, 2018.
  *
