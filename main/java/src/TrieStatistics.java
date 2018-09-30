@@ -25,9 +25,15 @@ public class TrieStatistics {
                 System.out.format("%4d %7d\n", k, v)
         );
 
+        System.out.println("\nHighest level of compression at depth:");
+        stats.highestCompressionByDepth.forEach((k,v) ->
+                System.out.format("%4d %4d\n", k, v)
+        );
+
         // Find the content length where there are THRESHOLD or fewer strings, i.e. find the first index in
         // stats.nodesByCharCount that is at most THRESHOLD.
         // Remember to cut out key 0 because the root has no contents.
+        System.out.println();
         final var maybeIdx = stats.nodesByCharCount.entrySet().stream()
                 .filter(e -> e.getKey() >= 1 && e.getValue() <= THRESHOLD)
                 .findAny()

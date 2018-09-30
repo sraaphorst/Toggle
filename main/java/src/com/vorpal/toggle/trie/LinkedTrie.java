@@ -227,13 +227,17 @@ public final class LinkedTrie implements Trie {
 
         // Because there are a surprising number of nodes that contain very large strings, keep track:
         public final Map<Integer, ArrayList<String>> stringCompressionsByCharCount = new TreeMap<>();
+
+        // We would also like to know the highest level of compression at each depth.
+        // TODO: Find the compressed nodes with the longest paths.
+        public final Map<Integer, Integer> highestCompressionByDepth = new TreeMap<>();
     }
 
     /**
      * Calculate statistics based on the trie.
      */
     public TrieStatistics analyze() {
-        TrieStatistics stats = new TrieStatistics();
+        final TrieStatistics stats = new TrieStatistics();
 
         // We keep track of the height of the tree.
         final Stack<Pair<LinkedTrieNode, Integer>> nodes = new Stack<>();
@@ -258,6 +262,11 @@ public final class LinkedTrie implements Trie {
             if (node.children.isEmpty())
                 if (height > stats.height)
                     stats.height = height;
+
+            // If we have any compression, check if it beats out the compression for this depth.
+            if (node.contents.length() > stats.highestCompressionByDepth.getOrDefault(height, 1)) {
+                stats.highestCompressionByDepth.put(height, node.contents.length());
+            }
 
             // Recurse over the children.
             node.children.values().forEach(c -> nodes.push(new Pair<>(c, height + 1)));
