@@ -35,7 +35,7 @@ public abstract class DiceSet {
 
     public DiceSet(final int side, final Die[] dice) {
         if (side < 3 || side > 7)
-            throw new IllegalArgumentException("DiceSet must have side 4 <= s <= 6");
+            throw new IllegalArgumentException("DiceSet must have side 3 <= s <= 7");
         if (dice.length != side * side)
             throw new IllegalArgumentException("DiceSet expected " + side * side + " dice, got " + dice.length);
         this.side = side;
