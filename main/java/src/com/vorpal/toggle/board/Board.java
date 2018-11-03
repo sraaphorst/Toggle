@@ -5,8 +5,10 @@
 package com.vorpal.toggle.board;
 
 import com.vorpal.toggle.dice.DiceSet;
+import com.vorpal.toggle.dice.Die;
 import com.vorpal.utils.BigMath;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,8 +45,8 @@ public class Board {
             throw new IllegalArgumentException("illegal y coordinate: " + y);
 
         // Calculate the index of the position.
-        final var index = BigMath.pairToIndex(diceSet.getSide(), x, y);
-        final var die = diceSet.getDie(permutation.get(index));
+        final int index = BigMath.pairToIndex(diceSet.getSide(), x, y);
+        final Die die = diceSet.getDie(permutation.get(index));
         return die.getChar(diceSides.get(index));
     }
 }

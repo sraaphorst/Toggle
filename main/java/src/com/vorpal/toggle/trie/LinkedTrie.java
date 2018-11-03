@@ -2,7 +2,6 @@
 //
 // By Sebastian Raaphorst, 2018.
 
-
 package com.vorpal.toggle.trie;
 
 import com.vorpal.utils.Pair;
@@ -119,8 +118,8 @@ public final class LinkedTrie implements Trie {
                 final LinkedTrieNode node = new LinkedTrieNode(parent, contents, true, children);
                 parent.ifPresent(p -> p.children.put(contents.charAt(0), node));
             } else if (!s2.isEmpty()) {
-                var first = s2.charAt(0);
-                var node = children.computeIfAbsent(first,
+                final char first = s2.charAt(0);
+                final LinkedTrieNode node = children.computeIfAbsent(first,
                         ($) -> new LinkedTrieNode(this, String.valueOf(first), s2.length() == 1));
 
                 // Now invoke with the rest of s2 on the child node.
@@ -206,9 +205,9 @@ public final class LinkedTrie implements Trie {
         final Stack<Pair<LinkedTrieNode, String>> nodes = new Stack<>();
         nodes.push(new Pair<>(root, ""));
         while (!nodes.empty()) {
-            final var np   = nodes.pop();
-            final var node = np.first;
-            final var str  = np.second + node.contents;
+            final Pair<LinkedTrieNode, String> np = nodes.pop();
+            final LinkedTrieNode node = np.first;
+            final String str  = np.second + node.contents;
 
             if (node.isValidWord)
                 consumer.accept(str);
@@ -248,14 +247,14 @@ public final class LinkedTrie implements Trie {
         final Stack<Pair<LinkedTrieNode, Integer>> nodes = new Stack<>();
         nodes.push(new Pair<>(root, 0));
         while (!nodes.empty()) {
-            final var pr     = nodes.pop();
-            final var node   = pr.first;
-            final var height = pr.second;
+            final Pair<LinkedTrieNode, Integer> pr = nodes.pop();
+            final LinkedTrieNode node = pr.first;
+            final int height = pr.second;
 
             ++stats.nodes;
             stats.nodesByCharCount.put(node.contents.length(), stats.nodesByCharCount.getOrDefault(node.contents.length(), 0) + 1);
 
-            var array = stats.stringCompressionsByCharCount.getOrDefault(node.contents.length(), new ArrayList<>());
+            final ArrayList<String> array = stats.stringCompressionsByCharCount.getOrDefault(node.contents.length(), new ArrayList<>());
             array.add(node.contents);
             stats.stringCompressionsByCharCount.put(node.contents.length(), array);
 

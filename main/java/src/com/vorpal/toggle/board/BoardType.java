@@ -140,16 +140,14 @@ public enum BoardType {
         if (x < 0 || x >= w || y < 0 || y >= h)
             throw new IllegalArgumentException("Illegal coordinates: " + c);
 
-        final var nbrs = new HashSet<Coordinates>();
+        final Set<Coordinates> nbrs = new HashSet<>();
 
         // This requires careful handling, so handle each case individually.
-        for (var xoffset = -1; xoffset <= 1; ++xoffset) {
-            for (var yoffset = -1; yoffset <= 1; ++yoffset) {
+        for (int xoffset = -1; xoffset <= 1; ++xoffset) {
+            for (int yoffset = -1; yoffset <= 1; ++yoffset) {
                 final int newx = x + xoffset;
                 final int newy = y + yoffset;
-
-                final var nbr = convert(w, h, newx, newy);
-                nbr.ifPresent(nbrs::add);
+                convert(w, h, newx, newy).ifPresent(nbrs::add);
             }
         }
 

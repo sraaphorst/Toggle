@@ -21,27 +21,27 @@ public final class BigMath {
         if (n < 0) throw new IllegalArgumentException("Attempted to calculate a negative factorial.");
 
         // Java doesn't care about tail recursion so we'll loop.
-        var f = BigInteger.ONE;
-        final var upper = BigInteger.valueOf(n);
-        for (var ctr = BigInteger.ONE; ctr.compareTo(upper) <= 0; ctr = ctr.add(BigInteger.ONE))
+        BigInteger f = BigInteger.ONE;
+        final BigInteger upper = BigInteger.valueOf(n);
+        for (BigInteger ctr = BigInteger.ONE; ctr.compareTo(upper) <= 0; ctr = ctr.add(BigInteger.ONE))
             f = f.multiply(ctr);
 
         return f;
     }
 
     public static BigInteger exponent(int x, int n) {
-        var e = BigInteger.ONE;
-        final var xb = BigInteger.valueOf(x);
-        for (var i = 0; i < n; ++i)
+        BigInteger e = BigInteger.ONE;
+        final BigInteger xb = BigInteger.valueOf(x);
+        for (int i = 0; i < n; ++i)
             e = e.multiply(xb);
         return e;
     }
 
     public static BigInteger rankPermutation(final int[] permutation) {
-        final var n = permutation.length;
-        final var usedDigits = new BitSet();
-        var rank = BigInteger.ZERO;
-        for (var i = 0; i < n; i++) {
+        final int n = permutation.length;
+        final BitSet usedDigits = new BitSet();
+        BigInteger rank = BigInteger.ZERO;
+        for (int i = 0; i < n; i++) {
             rank = rank.multiply(BigInteger.valueOf(n - i));
             int digit = 0;
             int v = -1;
@@ -55,18 +55,18 @@ public final class BigMath {
 
     public static int[] unrankPermutation(final int n, BigInteger rank) {
         final int[] digits = new int[n];
-        for (var digit = 2; digit <= n; digit++) {
-            var divisor = BigInteger.valueOf(digit);
+        for (int digit = 2; digit <= n; digit++) {
+            BigInteger divisor = BigInteger.valueOf(digit);
             digits[n - digit] = rank.mod(divisor).intValue();
             if (digit < n)
                 rank = rank.divide(divisor);
         }
 
-        var usedDigits = new BitSet();
+        final BitSet usedDigits = new BitSet();
         final int[] permutation = new int[n];
-        for (var i = 0; i < n; i++) {
-            var v = usedDigits.nextClearBit(0);
-            for (var j = 0; j < digits[i]; j++)
+        for (int i = 0; i < n; i++) {
+            int v = usedDigits.nextClearBit(0);
+            for (int j = 0; j < digits[i]; j++)
                 v = usedDigits.nextClearBit(v + 1);
             permutation[i] = v;
             usedDigits.set(v);
@@ -76,16 +76,16 @@ public final class BigMath {
     
     public static BigInteger rankDiceFaces(final int[] faces) {
         BigInteger rank = BigInteger.ZERO;
-        final var numFaces = BigInteger.valueOf(6);
-        for (var f: faces)
+        final BigInteger numFaces = BigInteger.valueOf(6);
+        for (int f: faces)
             rank = rank.multiply(numFaces).add(BigInteger.valueOf(f));
         return rank;
     }
 
     public static int[] unrankDiceFaces(final int n, BigInteger rank) {
         int[] faces = new int[n];
-        final var numFaces = BigInteger.valueOf(6);
-        for (var idx = n - 1; idx >= 0; --idx) {
+        final BigInteger numFaces = BigInteger.valueOf(6);
+        for (int idx = n - 1; idx >= 0; --idx) {
             faces[idx] = rank.mod(numFaces).intValue();
             rank = rank.divide(numFaces);
         }

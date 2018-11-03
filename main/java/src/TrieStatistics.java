@@ -6,6 +6,7 @@ import com.vorpal.toggle.trie.LinkedTrie;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Take a dictionary, make it into a trie.
@@ -33,37 +34,38 @@ public class TrieStatistics {
         // stats.nodesByCharCount that is at most THRESHOLD.
         // Remember to cut out key 0 because the root has no contents.
         System.out.println();
-        final var maybeIdx = stats.nodesByCharCount.entrySet().stream()
+        final Optional<Integer> maybeIdx = stats.nodesByCharCount.entrySet().stream()
                 .filter(e -> e.getKey() >= 1 && e.getValue() <= THRESHOLD)
                 .findAny()
                 .map(Map.Entry::getKey);
-        final var upper_idx = Collections.max(stats.nodesByCharCount.keySet());
+        final int upper_idx = Collections.max(stats.nodesByCharCount.keySet());
 
-        maybeIdx.ifPresentOrElse(
-                lower_idx -> {
-                    for (var i = lower_idx; i <= upper_idx; ++i) {
-                        System.out.println("Contents of nodes with length " + i + ":");
-                        for (final var c: stats.stringCompressionsByCharCount.get(i))
-                            System.out.print("  " + c);
-                        System.out.println();
-                    }
-                },
-                () -> System.out.println("No nodes with contents of length at least " + THRESHOLD + '.')
-        );
+        if (maybeIdx.isPresent()) {
+            maybeIdx.ifPresent(lower_idx -> {
+                for (int i = lower_idx; i <= upper_idx; ++i) {
+                    System.out.println("Contents of nodes with length " + i + ":");
+                    for (final String c: stats.stringCompressionsByCharCount.get(i))
+                        System.out.print("  " + c);
+                    System.out.println();
+                }
+            });
+        } else {
+            System.out.println("No nodes with contents of length at least " + THRESHOLD + '.');
+        }
     }
 
     public static void main(String[] args) {
         System.out.print("READING TRIE... ");
-        final var trie = new LinkedTrie(TrieStatistics.class.getResourceAsStream("/dictionary.txt"));
+        final LinkedTrie trie = new LinkedTrie(TrieStatistics.class.getResourceAsStream("/dictionary.txt"));
         System.out.println("done.\n");
-        final var stats1 = trie.analyze();
+        final LinkedTrie.TrieStatistics stats1 = trie.analyze();
         System.out.println("Statistics:");
         displayStats(stats1);
 
         System.out.print("\n\nPACKING TRIE... ");
         trie.pack();
         System.out.println("done.\n");
-        final var stats2 = trie.analyze();
+        final LinkedTrie.TrieStatistics stats2 = trie.analyze();
         System.out.println("Statistics:");
         displayStats(stats2);
     }

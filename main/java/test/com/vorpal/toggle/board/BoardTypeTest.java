@@ -29,11 +29,11 @@ class BoardTypeTest {
     @Test
     @DisplayName("Test GRID")
     void testGrid() {
-        for (var x = -1; x <= 4; ++x)
-            for (var y = -1; y <= 4; ++y) {
-                final var c = BoardType.GRID.convert(4, 4, x, y);
+        for (int x = -1; x <= 4; ++x)
+            for (int y = -1; y <= 4; ++y) {
+                final Optional<Coordinates> c = BoardType.GRID.convert(4, 4, x, y);
                 if (inBounds(x) && inBounds(y)) {
-                    final var e = new Coordinates(x, y);
+                    final Coordinates e = new Coordinates(x, y);
                     assertTrue(c.map(e::equals).orElse(false));
                 } else
                     assertFalse(c.isPresent());
@@ -43,11 +43,11 @@ class BoardTypeTest {
     @Test
     @DisplayName("Test X_CYLINDER")
     void testXCylinder() {
-        for (var x = -1; x <= 4; ++x)
-            for (var y = -1; y <= 4; ++y) {
-                final var c = BoardType.X_CYLINDER.convert(4, 4, x, y);
+        for (int x = -1; x <= 4; ++x)
+            for (int y = -1; y <= 4; ++y) {
+                final Optional<Coordinates> c = BoardType.X_CYLINDER.convert(4, 4, x, y);
                 if (inBounds(y)) {
-                    final var e = new Coordinates((x + 4) % 4, y);
+                    final Coordinates e = new Coordinates((x + 4) % 4, y);
                     assertTrue(c.map(e::equals).orElse(false));
                 } else
                     assertFalse(c.isPresent());
@@ -57,11 +57,11 @@ class BoardTypeTest {
     @Test
     @DisplayName("Test Y_CYLINDER")
     void testYCylinder() {
-        for (var x = -1; x <= 4; ++x)
-            for (var y = -1; y <= 4; ++y) {
-                final var c = BoardType.Y_CYLINDER.convert(4, 4, x, y);
+        for (int x = -1; x <= 4; ++x)
+            for (int y = -1; y <= 4; ++y) {
+                final Optional<Coordinates> c = BoardType.Y_CYLINDER.convert(4, 4, x, y);
                 if (inBounds(x)) {
-                    final var e = new Coordinates(x, (y + 4) % 4);
+                    final Coordinates e = new Coordinates(x, (y + 4) % 4);
                     assertTrue(c.map(e::equals).orElse(false));
                 } else
                     assertFalse(c.isPresent());
@@ -71,9 +71,9 @@ class BoardTypeTest {
     @Test
     @DisplayName("Test X_MOBIUS_STRIP")
     void testXMobiusStrip() {
-        for (var x = -1; x <= 4; ++x)
-            for (var y = -1; y <= 4; ++y) {
-                final var c = BoardType.X_MOBIUS_STRIP.convert(4, 4, x, y);
+        for (int x = -1; x <= 4; ++x)
+            for (int y = -1; y <= 4; ++y) {
+                final Optional<Coordinates> c = BoardType.X_MOBIUS_STRIP.convert(4, 4, x, y);
                 if (inBounds(y)) {
                     if (x == -1 && y == 0) check(c, 3, 3);
                     if (x == -1 && y == 1) check(c, 3, 2);
@@ -91,9 +91,9 @@ class BoardTypeTest {
     @Test
     @DisplayName("Test Y_MOBIUS_STRIP")
     void testYMobiusStrip() {
-        for (var x = -1; x <= 4; ++x)
-            for (var y = -1; y <= 4; ++y) {
-                final var c = BoardType.Y_MOBIUS_STRIP.convert(4, 4, x, y);
+        for (int x = -1; x <= 4; ++x)
+            for (int y = -1; y <= 4; ++y) {
+                final Optional<Coordinates> c = BoardType.Y_MOBIUS_STRIP.convert(4, 4, x, y);
                 if (inBounds(x)) {
                     if (x == 0 && y == -1) check(c, 3, 3);
                     if (x == 1 && y == -1) check(c, 2, 3);
@@ -111,9 +111,9 @@ class BoardTypeTest {
     @Test
     @DisplayName("Test TORUS")
     void testTorus() {
-        for (var x = -1; x <= 4; ++x)
-            for (var y = -1; y <= 4; ++y) {
-                final var c = BoardType.TORUS.convert(4, 4, x, y);
+        for (int x = -1; x <= 4; ++x)
+            for (int y = -1; y <= 4; ++y) {
+                final Optional<Coordinates> c = BoardType.TORUS.convert(4, 4, x, y);
                 if (x ==  0 && y == -1) check(c, 0, 3);
                 if (x ==  1 && y == -1) check(c, 1, 3);
                 if (x ==  2 && y == -1) check(c, 2, 3);
@@ -144,9 +144,9 @@ class BoardTypeTest {
     @Test
     @DisplayName("Test X_KLEIN_BOTTLE")
     void testXKleinBottle() {
-        for (var x = -1; x <= 4; ++x)
-            for (var y = -1; y <= 4; ++y) {
-                final var c = BoardType.X_KLEIN_BOTTLE.convert(4, 4, x, y);
+        for (int x = -1; x <= 4; ++x)
+            for (int y = -1; y <= 4; ++y) {
+                final Optional<Coordinates> c = BoardType.X_KLEIN_BOTTLE.convert(4, 4, x, y);
                 if (x ==  0 && y == -1) check(c, 0, 3);
                 if (x ==  1 && y == -1) check(c, 1, 3);
                 if (x ==  2 && y == -1) check(c, 2, 3);
@@ -177,9 +177,9 @@ class BoardTypeTest {
     @Test
     @DisplayName("Test Y_KLEIN_BOTTLE")
     void testYKleinBottle() {
-        for (var x = -1; x <= 4; ++x)
-            for (var y = -1; y <= 4; ++y) {
-                final var c = BoardType.Y_KLEIN_BOTTLE.convert(4, 4, x, y);
+        for (int x = -1; x <= 4; ++x)
+            for (int y = -1; y <= 4; ++y) {
+                final Optional<Coordinates> c = BoardType.Y_KLEIN_BOTTLE.convert(4, 4, x, y);
                 if (x ==  0 && y == -1) check(c, 3, 3);
                 if (x ==  1 && y == -1) check(c, 2, 3);
                 if (x ==  2 && y == -1) check(c, 1, 3);
@@ -210,9 +210,9 @@ class BoardTypeTest {
     @Test
     @DisplayName("Test PROJECTIVE_PLANE")
     void testProjectivePlane() {
-        for (var x = -1; x <= 4; ++x)
-            for (var y = -1; y <= 4; ++y) {
-                final var c = BoardType.PROJECTIVE_PLANE.convert(4, 4, x, y);
+        for (int x = -1; x <= 4; ++x)
+            for (int y = -1; y <= 4; ++y) {
+                final Optional<Coordinates> c = BoardType.PROJECTIVE_PLANE.convert(4, 4, x, y);
                 if (x ==  0 && y == -1) check(c, 3, 3);
                 if (x ==  1 && y == -1) check(c, 2, 3);
                 if (x ==  2 && y == -1) check(c, 1, 3);
