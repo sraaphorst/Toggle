@@ -56,7 +56,7 @@ public final class DiceSetManager {
      */
     public static ObservableList<DiceSet> getDiceSets() {
         if (diceSets.isEmpty())
-            diceSets.add(DefaultDiceSets.DefaultDiceSet);
+            diceSets.add(DefaultDiceSets.DEFAULT_16_DICE_SET);
         return FXCollections.unmodifiableObservableList(diceSets);
     }
 }

@@ -17,7 +17,7 @@ import java.math.BigInteger;
  * terms of actual representations, because the unviewable portion (i.e. the five sides of the dice you cannot see)
  * would differ.
  */
-public abstract class DiceSet {
+public final class DiceSet {
     // The length and width of the board.
     private final int side;
 
