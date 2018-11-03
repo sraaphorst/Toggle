@@ -36,7 +36,8 @@ and packed tries to evaluate the inherent value in glyphs and words in different
 
 Other projects and ideas will probably emerge as the project continues.
 
-Here is an image of a board embedded on the surface of a Klein bottle.
+Here is an image of a board embedded on the surface of a Klein bottle. The white squares indicate the dice, and the grey
+squares indicate their adjacencies that are non-obvious.
 
 ![klein_bottle](documentation/klein_bottle_board.png)
 
