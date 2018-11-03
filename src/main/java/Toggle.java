@@ -17,13 +17,21 @@ public class Toggle {
         final InputStream res = Trie.class.getResourceAsStream("/dictionary.txt");
         LinkedTrie trie = new LinkedTrie(res);
 
-        final Board board = new Board(BoardType.Y_KLEIN_BOTTLE,
+//        final Board board = new Board(BoardType.GRID,
+//                DefaultDiceSets.DEFAULT_16_DICE_SET,
+//                BigMath.unrankPermutationAsList(16, BigInteger.ZERO),
+//                BigMath.unrankDiceFacesAsList(16, BigInteger.ZERO),
+//                trie, 4);
+
+        final Board board = new Board(BoardType.TORUS,
                 DefaultDiceSets.DEFAULT_16_DICE_SET,
-                BigMath.unrankPermutationAsList(16, BigInteger.ZERO),
-                BigMath.unrankDiceFacesAsList(16, BigInteger.ZERO),
+                BigMath.unrankPermutationAsList(16, BigInteger.valueOf(9223372036854775807L)),
+                BigMath.unrankDiceFacesAsList(16, BigInteger.valueOf(839283)),
                 trie, 4);
 
+        System.out.println("\n");
         for (int x = 0; x < 4; ++x) {
+            System.out.print("   ");
             for (int y = 0; y < 4; ++y) {
                 final String val = board.getValueAt(x, y);
                 //final int padding = 3 - val.length();
@@ -31,6 +39,7 @@ public class Toggle {
             }
             System.out.println();
         }
+        System.out.println("\n");
 
         for (final String s: board.getWords())
             System.out.println(s);

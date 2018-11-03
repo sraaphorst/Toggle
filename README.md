@@ -36,6 +36,13 @@ and packed tries to evaluate the inherent value in glyphs and words in different
 
 Other projects and ideas will probably emerge as the project continues.
 
+Here is an example of a board (board #9223372036854775807:839283) that is on the surface of a torus,
+i.e. you can loop around from top to bottom and left to right, and how you can use that to spell the word
+ENSEALING, with the initial E circled in green, the final G circled in blue, and the lines connecting dice
+shown in red.
+
+![ensealing](documentation/ensealing.png)
+
 Here is an image of a board embedded on the surface of a Klein bottle. The white squares indicate the dice, and the grey
 squares indicate their adjacencies that are non-obvious.
 
