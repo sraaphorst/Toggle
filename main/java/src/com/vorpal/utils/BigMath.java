@@ -5,8 +5,11 @@
 package com.vorpal.utils;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.BitSet;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Operations requiring BigInteger.
@@ -73,6 +76,10 @@ public final class BigMath {
         }
         return permutation;
     }
+
+    public static List<Integer> unrankPermutationAsList(final int n, BigInteger rank) {
+        return Arrays.stream(unrankPermutation(n, rank)).boxed().collect(Collectors.toList());
+    }
     
     public static BigInteger rankDiceFaces(final int[] faces) {
         BigInteger rank = BigInteger.ZERO;
@@ -90,6 +97,10 @@ public final class BigMath {
             rank = rank.divide(numFaces);
         }
         return faces;
+    }
+
+    public static List<Integer> unrankDiceFacesAsList(final int n, BigInteger rank) {
+        return Arrays.stream(unrankDiceFaces(n, rank)).boxed().collect(Collectors.toList());
     }
 
     /**

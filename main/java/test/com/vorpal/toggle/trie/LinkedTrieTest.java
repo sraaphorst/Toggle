@@ -12,7 +12,7 @@ final class LinkedTrieTest {
 
     @BeforeAll
     static void setUp() {
-        final InputStream res = LinkedTrieTest.class.getResourceAsStream("/dictionary.txt");
+        final InputStream res = Trie.class.getResourceAsStream("/dictionary.txt");
         trie = new LinkedTrie(res);
     }
 
@@ -50,6 +50,9 @@ final class LinkedTrieTest {
         for (int i = 0; i <= applesauce.length(); ++i)
             assertTrue(trie.isPrefix(applesauce.substring(0, i)));
         assertFalse(trie.isPrefix(applesauce + "a"));
+
+        assertFalse(trie.isPrefix("xx"));
+        assertFalse(trie.isPrefix("appletts"));
     }
 
 }
