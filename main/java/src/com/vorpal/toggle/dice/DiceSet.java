@@ -18,6 +18,9 @@ import java.math.BigInteger;
  * would differ.
  */
 public final class DiceSet {
+    // Name and description of the dice set.
+    final String name;
+
     // The length and width of the board.
     private final int side;
 
@@ -33,11 +36,13 @@ public final class DiceSet {
     // The number of possible boards.
     private final BigInteger numBoards;
 
-    public DiceSet(final int side, final Die[] dice) {
+    public DiceSet(final String name, final int side, final Die[] dice) {
         if (side < 3 || side > 7)
             throw new IllegalArgumentException("DiceSet must have side 3 <= s <= 7");
         if (dice.length != side * side)
             throw new IllegalArgumentException("DiceSet expected " + side * side + " dice, got " + dice.length);
+
+        this.name = name;
         this.side = side;
         this.dice = dice;
 
@@ -54,8 +59,12 @@ public final class DiceSet {
         return side * side;
     }
 
-    public final Die getDie(int index) {
+    public Die getDie(int index) {
         return dice[index];
+    }
+
+    public String getName() {
+        return name;
     }
 
     // Given a board rank, create the board.

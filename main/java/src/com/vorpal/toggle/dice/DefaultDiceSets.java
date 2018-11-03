@@ -10,7 +10,9 @@ package com.vorpal.toggle.dice;
 public class DefaultDiceSets implements DiceConstants{
     private DefaultDiceSets() {}
 
-    public final static DiceSet DEFAULT_16_DICE_SET = new DiceSet(4,
+    public final static DiceSet DEFAULT_16_DICE_SET = new DiceSet(
+            "Default 4x4 dice set",
+            4,
             new Die[]{
                     new Die(A, A, C, I, O, T),
                     new Die(A, B, I, L, T, Y),
@@ -30,7 +32,9 @@ public class DefaultDiceSets implements DiceConstants{
                     new Die(G, I, L, R, U, W),
             });
 
-    public final static DiceSet DEFAULT_25_DICE_SET = new DiceSet(5,
+    public final static DiceSet DEFAULT_25_DICE_SET = new DiceSet(
+            "Default 5x5 dice set",
+            5,
             new Die[]{
                     new Die(A, A, A, F, R, S),
                     new Die(A, A, E, E, E, E),
