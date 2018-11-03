@@ -119,10 +119,10 @@ public enum BoardType {
             // This is the most complicated case, worked out painfully by hand.
             // -1 goes to 0
             // 4 goes to 3
-            int adjx = xAlign == AxisAlignment.LINKED ?
+            int adjx = yAlign == AxisAlignment.LINKED ?
                     (newx + w) % w :
                     Math.abs(newx) - 1;
-            int adjy = yAlign == AxisAlignment.LINKED ?
+            int adjy = xAlign == AxisAlignment.LINKED ?
                     (newy + h) % h :
                     Math.abs(newy) - 1;
             return Optional.of(new Coordinates(adjx, adjy));
