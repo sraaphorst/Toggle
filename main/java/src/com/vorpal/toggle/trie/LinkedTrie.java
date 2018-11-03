@@ -22,6 +22,8 @@ import java.util.stream.Stream;
 public final class LinkedTrie implements Trie {
     /**
      * A node in the linked trie.
+     * I'm aware of the "misuse" of Optional here, but we're not making this serializable, and it's only meant to be
+     * used internally: otherwise, we would have to implement our own Optional.
      */
     private final class LinkedTrieNode {
         // The characters represented by this node.
@@ -36,6 +38,7 @@ public final class LinkedTrie implements Trie {
         private final Map<Character, LinkedTrieNode> children;
 
         // The parent of this node in the trie: the root has an empty value.
+        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
         private final Optional<LinkedTrieNode> parent;
 
         // Creates an empty root node.
@@ -43,6 +46,7 @@ public final class LinkedTrie implements Trie {
             this(Optional.empty(), "", false);
         }
 
+        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
         LinkedTrieNode(final Optional<LinkedTrieNode> parent, final String contents, final boolean isValidWord) {
             this.parent = parent;
             this.contents = contents.toLowerCase();
@@ -55,6 +59,7 @@ public final class LinkedTrie implements Trie {
         }
 
         // Used for packing only.
+        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
         private LinkedTrieNode(final Optional<LinkedTrieNode> parent, final String contents,
                                final boolean isValidWord, final Map<Character, LinkedTrieNode> children) {
             this.parent = parent;
@@ -62,6 +67,7 @@ public final class LinkedTrie implements Trie {
             this.isValidWord = isValidWord;
             this.children = children;
         }
+
         /**
          * The pack method tries to reduce the number of nodes in the trie.
          * A node can be packed if the conditions hold:
@@ -112,7 +118,6 @@ public final class LinkedTrie implements Trie {
             if (s2.isEmpty() && !isValidWord) {
                 final LinkedTrieNode node = new LinkedTrieNode(parent, contents, true, children);
                 parent.ifPresent(p -> p.children.put(contents.charAt(0), node));
-                return;
             } else if (!s2.isEmpty()) {
                 var first = s2.charAt(0);
                 var node = children.computeIfAbsent(first,
@@ -188,7 +193,7 @@ public final class LinkedTrie implements Trie {
      * Attempts to add a word to the trie. Note that if the trie has been packed, then this may result in
      * an exception.
      * @param s the word to add
-     * @throws IllegalStateException
+     * @throws IllegalStateException if the trie has been packed and we cannot insert
      */
     public void addWord(final String s) throws IllegalStateException {
         root.add(s);
