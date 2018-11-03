@@ -40,11 +40,20 @@ public final class LinkedTrie implements Trie {
         @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
         private final Optional<LinkedTrieNode> parent;
 
-        // Creates an empty root node.
+        /**
+         * Creates an empty root node.
+         */
         LinkedTrieNode() {
             this(Optional.empty(), "", false);
         }
 
+        /**
+         * Create a node linked (optionally) to a parent node, with contents, and whether the node is marked as
+         * comprising a valid word.
+         * @param parent optional parent node
+         * @param contents word fragment represented by this node
+         * @param isValidWord true if this node represents a valid word, and false otherwise
+         */
         @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
         LinkedTrieNode(final Optional<LinkedTrieNode> parent, final String contents, final boolean isValidWord) {
             this.parent = parent;
@@ -53,11 +62,26 @@ public final class LinkedTrie implements Trie {
             children = new HashMap<>();
         }
 
-        LinkedTrieNode(final LinkedTrieNode parent, final String contents, final boolean isWord) {
-            this(Optional.ofNullable(parent), contents, isWord);
+        /**
+         * Create a node linked to a parent node, with contents, and whether the node is marked as comprising
+         * a valid word.
+         * @param parent parent node
+         * @param contents word fragment represented by this node
+         * @param isValidWord true if this node represents a valid word, and false otherwise
+         */
+        LinkedTrieNode(final LinkedTrieNode parent, final String contents, final boolean isValidWord) {
+            this(Optional.ofNullable(parent), contents, isValidWord);
         }
 
         // Used for packing only.
+
+        /**
+         * A constructor used only when packing the tree.
+         * @param parent optional parent node
+         * @param contents word fragment represented by this node
+         * @param isValidWord true is this node represents a valid word, and false otherwise
+         * @param children children of the current node
+         */
         @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
         private LinkedTrieNode(final Optional<LinkedTrieNode> parent, final String contents,
                                final boolean isValidWord, final Map<Character, LinkedTrieNode> children) {
@@ -79,7 +103,7 @@ public final class LinkedTrie implements Trie {
          * NOTE: pack should never be invoked until all words have been added; otherwise, essential intermediate
          * nodes may not exist during an addWord operation.
          */
-        public void pack() {
+        void pack() {
             // Pack the children.
             children.values().forEach(LinkedTrieNode::pack);
 
@@ -99,8 +123,13 @@ public final class LinkedTrie implements Trie {
             }
         }
 
-        // Add a word, or a partially digested word fragment, to this node.
-        public void add(final String sm) {
+        /**
+         * Add a word fragment from this node to the trie.
+         * Note that if the trie has been packed, this can throw an IllegalStateException if it no longer can be
+         * made to fit without splitting up packed nodes.
+         * @param sm the word fragment
+         */
+        void add(final String sm) {
             final String s = sm.toLowerCase();
             if (!s.startsWith(contents))
                 // Something has gone wrong. This call means that the trie is invalid.
@@ -127,8 +156,27 @@ public final class LinkedTrie implements Trie {
             }
         }
 
-        // Determine if the fragment here is a word.
-        public boolean isWord(final String s) {
+        /**
+         * Determine if the supplied string is a prefix of a valid traversal starting at this node.
+         * @param s the string
+         * @return true if a prefix (or word), and false otherwise
+         */
+        boolean isPrefix(final String s) {
+            // If the contents of this node start with s, then we are in a node where the word so far is a prefix.
+            if (contents.startsWith(s))
+                return true;
+
+            // Chop off the contents and recurse.
+            final String s2 = s.substring(contents.length());
+            return children.containsKey(s2.charAt(0)) && children.get(s2.charAt(0)).isPrefix(s2);
+        }
+
+        /**
+         * Determine if the fragment here, beginning at a traversal at this node, is a word.
+         * @param s the string
+         * @return true if a word, and false otherwise
+         */
+        boolean isWord(final String s) {
             // The first condition shouldn't happen as we only iterate if we have letters left.
             // Secondly, if s doesn't start with the contents of this node, it is not a word.
             if (s.isEmpty() || !s.startsWith(contents))
@@ -147,25 +195,41 @@ public final class LinkedTrie implements Trie {
             return contents;
         }
     }
-    /*************/
+    /*----- End of LinkedTrieNode -----*/
 
-    // Create a Trie from a stream of words.
-    // Diactrics are removed, and strings are converted to lowercase.
+    /**
+     * Create a Trie from the supplied stream of words.
+     * Note that diacritics are removed, and strings are converted to lowercase.
+     * @param words the stream of words.
+     */
     public LinkedTrie(final Stream<String> words) {
         root = new LinkedTrieNode();
         words.map(w -> Normalizer.normalize(w, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", ""))
                 .forEach(root::add);
     }
 
-    // Create a Trie from a file.
+    /**
+     * Create a trie from the supplied filename.
+     * @param filename name of the file
+     * @throws java.io.IOException if error occurs when trying to open file
+     */
     public LinkedTrie(final String filename) throws java.io.IOException {
         this(Files.lines(Paths.get(filename)));
     }
 
+    /**
+     * Create a trie from the supplied file.
+     * @param file the file
+     * @throws java.io.FileNotFoundException if error occurs when trying to access file
+     */
     public LinkedTrie(final File file) throws java.io.FileNotFoundException {
         this(new BufferedReader(new FileReader(file)).lines());
     }
 
+    /**
+     * Create a trie from the supplied input stream, which should have one word per line.
+     * @param is the input strem
+     */
     public LinkedTrie(final InputStream is) {
         this(new BufferedReader(new InputStreamReader(is)).lines());
     }
@@ -176,6 +240,16 @@ public final class LinkedTrie implements Trie {
      */
     public void pack() {
         root.pack();
+    }
+
+    /**
+     * Determine if, according to this trie, the specified string is a suffix.
+     * @param s the string to check
+     * @return true if it is a suffix, and false otherwise
+     */
+    @Override
+    public boolean isPrefix(final String s) {
+        return root.isPrefix(s.toLowerCase());
     }
 
     /**
@@ -200,6 +274,7 @@ public final class LinkedTrie implements Trie {
 
     /**
      * Dumps the tree by visiting each node.
+     * @param consumer the consumer that is passed each valid word
      */
     public void dump(final Consumer<String> consumer) {
         final Stack<Pair<LinkedTrieNode, String>> nodes = new Stack<>();
@@ -216,10 +291,9 @@ public final class LinkedTrie implements Trie {
         }
     }
 
-    /******************
-     * TrieStatistics *
-     ******************/
-    // Some statistics about the size and height of the trie, in order to determine the effect that packing has.
+    /**
+     * Some statistics about the size and height of the trie, in order to determine the effect that packing has.
+     */
     public class TrieStatistics {
         public int height  = -1;
         public long nodes  =  0;

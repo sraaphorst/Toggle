@@ -43,4 +43,13 @@ final class LinkedTrieTest {
         assertTrue(trie.isWord("aPpLe"));
     }
 
+    @Test
+    void testPrefix() {
+        final String applesauce = "applesauce";
+
+        for (int i = 0; i <= applesauce.length(); ++i)
+            assertTrue(trie.isPrefix(applesauce.substring(0, i)));
+        assertFalse(trie.isPrefix(applesauce + "a"));
+    }
+
 }

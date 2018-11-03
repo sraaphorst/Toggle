@@ -11,6 +11,13 @@ import java.util.function.Consumer;
  */
 public interface Trie {
     /**
+     * Given a string, check if it is contained, as a word or suffix of other words in the tree.
+     * @param s the string to check
+     * @return true is s is recognized as a suffix
+     */
+    boolean isPrefix(final String s);
+
+    /**
      * Given a string, check if it is a word according to the trie.
      * @param s the string to check
      * @return true is s is recognized as a word
