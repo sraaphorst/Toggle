@@ -1,8 +1,12 @@
+// Die.java
+//
+// By Sebastian Raaphorst, 2018.
+
 package com.vorpal.toggle.dice;
 
 /**
  * A single 6-sided die. We could generalize this to an n-sided die but I don't want to over-complicate
- * this project. Similarly, Q will represent Qu in all cases, as per regular Boggle.
+ * this project. Similarly, Q will represent Qu in all cases, as per the standard in many of these games.
  */
 public class Die {
     private final String[] chars;

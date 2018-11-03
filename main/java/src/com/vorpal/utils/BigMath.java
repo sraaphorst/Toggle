@@ -1,18 +1,19 @@
 // BigMath.java
 //
 // By Sebastian Raaphorst, 2018.
-//
-// Operations requiring BigInteger.
-// Note that ranking / unranking modified from:
-//   https://rosettacode.org/wiki/Permutations/Rank_of_a_permutation#Java
 
 package com.vorpal.utils;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
+/**
+ * Operations requiring BigInteger.
+ *
+ * Note that ranking / unranking modified from:
+ * https://rosettacode.org/wiki/Permutations/Rank_of_a_permutation#Java
+ */
 public final class BigMath {
     private BigMath() {}
 

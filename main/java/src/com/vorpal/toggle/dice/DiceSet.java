@@ -1,12 +1,17 @@
+// DiceSet.java
+//
+// By Sebastian Raaphorst, 2018.
+
 package com.vorpal.toggle.dice;
 
+import com.vorpal.toggle.board.Board;
 import com.vorpal.utils.BigMath;
 
 import java.math.BigInteger;
 
 /**
  * Represents the set of dice making up a Toggle board, but not up to isomorphism as that would be nightmarish to
- * calculate and rank / unrank. Thus, every symmetry of each board will be represented, and boards will be weigthed
+ * calculate and rank / unrank. Thus, every symmetry of each board will be represented, and boards will be weighted
  * in some sense, i.e. if a board B can be created by another identical rearrangement of the dice, say B', then
  * both B and B' will have rank numbers despite them being the same in terms of gameplay. They are not the same in
  * terms of actual representations, because the unviewable portion (i.e. the five sides of the dice you cannot see)

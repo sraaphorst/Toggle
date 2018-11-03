@@ -1,21 +1,20 @@
-/**
- * Pair.java
- *
- * By Sebastian Raaphorst, 2018.
- *
- * Simple implementation of a pair.
- */
+// Pair.java
+//
+// By Sebastian Raaphorst, 2018.
 
 package com.vorpal.utils;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Simple implementation of a pair of two values.
+ * @param <T> type of the first value
+ * @param <U> type of the second value
+ */
 public class Pair<T,U> implements Serializable {
-    public T first;
-    public U second;
-
-    public Pair() {}
+    final public T first;
+    final public U second;
 
     public Pair(final T first, final U second) {
         this.first = first;

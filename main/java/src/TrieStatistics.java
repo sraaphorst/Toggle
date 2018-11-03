@@ -1,22 +1,21 @@
-/**
- * TrieStatistics.java
- *
- * By Sebastian Raaphorst, 2018.
- *
- * Take a dictionary, make it into a trie.
- * Then take the trie and perform a packing algorithm on it.
- * Compute some statistics on each of the two tries, and compare them.
- */
+// TrieStatistics.java
+//
+// By Sebastian Raaphorst, 2018.
 
 import com.vorpal.toggle.trie.LinkedTrie;
 
 import java.util.Collections;
 import java.util.Map;
 
+/**
+ * Take a dictionary, make it into a trie.
+ * Then take the trie and perform a packing algorithm on it.
+ * Compute some statistics on each of the two tries, and compare them.
+ */
 public class TrieStatistics {
     private static final int THRESHOLD = 25;
 
-    static void displayStats(LinkedTrie.TrieStatistics stats) {
+    private static void displayStats(LinkedTrie.TrieStatistics stats) {
         System.out.format("\t* Number of nodes: %8d\n", stats.nodes);
         System.out.format("\t* Height of trie:  %8d\n", stats.height);
         System.out.format("\t* Number of words: %8d\n\n", stats.words);

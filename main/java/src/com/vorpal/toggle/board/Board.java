@@ -1,5 +1,10 @@
-package com.vorpal.toggle.dice;
+// Board.java
+//
+// By Sebastian Raaphorst, 2018.
 
+package com.vorpal.toggle.board;
+
+import com.vorpal.toggle.dice.DiceSet;
 import com.vorpal.utils.BigMath;
 
 import java.util.List;

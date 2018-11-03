@@ -1,11 +1,7 @@
-/**
- * LinkedTrie.java
- *
- * By Sebastian Raaphorst, 2018.
- *
- * Collection of linked nodes, each representing a single letter or a sequence of letters.
- * Note that lookups are CASE INSENSITIVE.
- */
+// LinkedTrie.java
+//
+// By Sebastian Raaphorst, 2018.
+
 
 package com.vorpal.toggle.trie;
 
@@ -19,11 +15,15 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+/**
+ * A trie implementation, i.e. a collection of linked nodes, each representing a single letter or a sequence of letters.
+ * Note that lookups are CASE INSENSITIVE.
+ */
 public final class LinkedTrie implements Trie {
-    /************
-     * TrieNode *
-     ************/
-    private final class LinkedTrieNode implements TrieNode {
+    /**
+     * A node in the linked trie.
+     */
+    private final class LinkedTrieNode {
         // The characters represented by this node.
         // For example, if this node has "t", the parent has "i", and the grandparent is the root, then this node
         // represents the word "it".
