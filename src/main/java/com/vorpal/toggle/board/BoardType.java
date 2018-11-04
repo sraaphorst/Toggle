@@ -97,6 +97,14 @@ public enum BoardType {
         this.yAlign = yAlign;
     }
 
+    public AxisAlignment getXAxisAlignment() {
+        return xAlign;
+    }
+
+    public AxisAlignment getYAxisAlignment() {
+        return yAlign;
+    }
+
     public Optional<Coordinates> convert(final int w, final int h, final int newx, final int newy) {
         // We will look at all four cases:
         // 1. x in bounds, y in bounds.
@@ -145,6 +153,9 @@ public enum BoardType {
         // This requires careful handling, so handle each case individually.
         for (int xoffset = -1; xoffset <= 1; ++xoffset) {
             for (int yoffset = -1; yoffset <= 1; ++yoffset) {
+                // We do not want to be adjacent to ourselves.
+                if (xoffset == 0 && yoffset == 0)
+                    continue;
                 final int newx = x + xoffset;
                 final int newy = y + yoffset;
                 convert(w, h, newx, newy).ifPresent(nbrs::add);

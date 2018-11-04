@@ -86,6 +86,32 @@ public class Board {
     }
 
     /**
+     * Return the type of this board.
+     * This enables us to know if, in displaying, we should have columns or rows around the actual board to indicate
+     * adjacencies.
+     * @return the board type
+     */
+    public BoardType getBoardType() {
+        return boardType;
+    }
+
+    /**
+     * Return the size of the board.
+     * @return the board size
+     */
+    public Dimensions getSize() {
+        return boardSize;
+    }
+
+    /**
+     * Return the list of words that exist in this board.
+     * @return the list of valid words
+     */
+    public List<String> getValidWords() {
+        return words;
+    }
+
+    /**
      * This backtracking algorithm, given the stack of dice chosen so far and the word represented,
      * determines what words can be generated from this choice and adds them to this.words.
      * @param stack the coordinates of the dice chosen so far
@@ -127,6 +153,12 @@ public class Board {
     public String getValueAt(final int x, final int y) {
         final int index = BigMath.pairToIndex(diceSet.getSide(), x, y);
         return getDieAt(x, y).getChar(diceSides.get(index));
+    }
+
+    public String getOutOfBoundsValueAt(final int x, final int y) {
+        final Optional<Coordinates> position = boardType.convert(boardSize.first, boardSize.second, x, y);
+        return getValueAt(position.orElseThrow(
+                () -> new IllegalArgumentException("There is no out-of bounds position " + new Coordinates(x, y))));
     }
 
     public Set<Coordinates> getAdjacencies(final Coordinates c) {

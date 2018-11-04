@@ -14,8 +14,8 @@ public class Toggle {
     }
 
     public static void main(String[] args) {
-        final InputStream res = Trie.class.getResourceAsStream("/dictionary.txt");
-        LinkedTrie trie = new LinkedTrie(res);
+//        final InputStream res = Trie.class.getResourceAsStream("/dictionary.txt");
+//        LinkedTrie trie = new LinkedTrie(res);
 
 //        final Board board = new Board(BoardType.GRID,
 //                DefaultDiceSets.DEFAULT_16_DICE_SET,
@@ -27,7 +27,7 @@ public class Toggle {
                 DefaultDiceSets.DEFAULT_16_DICE_SET,
                 BigMath.unrankPermutationAsList(16, BigInteger.valueOf(9223372036854775807L)),
                 BigMath.unrankDiceFacesAsList(16, BigInteger.valueOf(839283)),
-                trie, 4);
+                Trie.createDefaultTrie(), 4);
 
         System.out.println("\n");
         for (int x = 0; x < 4; ++x) {

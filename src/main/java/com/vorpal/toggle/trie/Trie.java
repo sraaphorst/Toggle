@@ -30,4 +30,8 @@ public interface Trie {
      * @param consumer the consumer of the complete words.
      */
     void dump(final Consumer<String> consumer);
+
+    static Trie createDefaultTrie() {
+        return new LinkedTrie(Trie.class.getResourceAsStream("/dictionary.txt"));
+    }
 }
