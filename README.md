@@ -1,6 +1,6 @@
 # Toggle
 
-**Current status**: Development in progress.
+**Current status**: Development in progress, mostly completed.
 
 **Toggle** is a Boggle-like variant (the name is a play on **Topological Boggle**) that was inspired
 by the fact that on a regular Boggle board, the dice on the edges of the board (and in particular
